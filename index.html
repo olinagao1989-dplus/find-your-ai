@@ -305,16 +305,16 @@
   .modal-sheet {
     background: var(--card); width: 100%; max-width: 420px;
     border-radius: var(--radius) var(--radius) 0 0;
-    padding: 28px 24px 36px;
+    padding: 0;
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
-    max-height: 90vh; overflow-y: auto;
+    max-height: 85vh; overflow: hidden;
   }
   .modal-overlay.open .modal-sheet { transform: translateY(0); }
 
   .modal-header {
     display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 20px;
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
   }
   .modal-title { font-size: 17px; font-weight: 700; }
   .modal-close {
@@ -325,35 +325,9 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
-  .form-input {
-    width: 100%; padding: 12px 14px;
-    border: 1.5px solid var(--border); border-radius: 12px;
-    font-size: 14px; font-family: inherit; color: var(--text);
-    background: var(--bg); outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s; resize: none;
+  .tally-frame {
+    width: 100%; height: 65vh; border: none; display: block;
   }
-  .form-input:focus {
-    border-color: var(--purple);
-    box-shadow: 0 0 0 3px rgba(160,126,224,0.1);
-  }
-  .form-input::placeholder { color: #bbb; }
-
-  .form-submit {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, var(--purple), #c49df0);
-    color: #fff; font-size: 15px; font-weight: 700;
-    border: none; border-radius: 12px; cursor: pointer;
-    transition: all 0.3s; margin-top: 4px;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .form-submit:active { transform: scale(0.97); }
-
-  .form-success { text-align: center; padding: 20px 0; display: none; }
-  .form-success .success-emoji { font-size: 48px; margin-bottom: 12px; }
-  .form-success h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .form-success p { font-size: 14px; color: var(--text2); line-height: 1.6; }
 
   /* ===== Footer ===== */
   .footer {
@@ -499,26 +473,7 @@
       <div class="modal-title">✍️ 写下你的需求</div>
       <button class="modal-close" onclick="closeModal()">×</button>
     </div>
-    <div id="modalForm">
-      <div class="form-group">
-        <label class="form-label">你最想让AI帮你做什么？</label>
-        <input type="text" class="form-input" id="q1" placeholder="比如：帮我整理客户资料...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">现在最让你麻烦的地方是什么？</label>
-        <textarea class="form-input" id="q2" rows="3" placeholder="越具体越好..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">怎么联系你？</label>
-        <input type="text" class="form-input" id="q3" placeholder="小红书号 / 微信 / 邮箱">
-      </div>
-      <button class="form-submit" onclick="submitDemand()">提交需求</button>
-    </div>
-    <div class="form-success" id="formSuccess">
-      <div class="success-emoji">🎉</div>
-      <h3>已收到！</h3>
-      <p>你的需求我们记下了。<br>如果下一款小助理就是为你做的，我们会第一时间通知你！</p>
-    </div>
+    <iframe class="tally-frame" src="https://tally.so/embed/1A6lRg" frameborder="0" marginheight="0" marginwidth="0" title="省心小铺需求收集"></iframe>
   </div>
 </div>
 
@@ -694,35 +649,6 @@ function closeModal(e) {
   if (e && e.target !== e.currentTarget) return;
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  setTimeout(() => {
-    document.getElementById('modalForm').style.display = 'block';
-    document.getElementById('formSuccess').style.display = 'none';
-    document.getElementById('q1').value = '';
-    document.getElementById('q2').value = '';
-    document.getElementById('q3').value = '';
-  }, 300);
-}
-
-function submitDemand() {
-  const q1 = document.getElementById('q1').value.trim();
-  const q2 = document.getElementById('q2').value.trim();
-  const q3 = document.getElementById('q3').value.trim();
-
-  if (!q1 || !q2 || !q3) {
-    alert('请填写完所有问题再提交哦 😊');
-    return;
-  }
-
-  const subject = encodeURIComponent('【省心小铺】新的AI小助理需求');
-  const body = encodeURIComponent(
-    '你最想让AI帮你做什么？\n' + q1 + '\n\n' +
-    '现在最让你麻烦的地方是什么？\n' + q2 + '\n\n' +
-    '怎么联系你？\n' + q3
-  );
-  window.location.href = 'mailto:kup6662026@example.com?subject=' + subject + '&body=' + body;
-
-  document.getElementById('modalForm').style.display = 'none';
-  document.getElementById('formSuccess').style.display = 'block';
 }
 
 // 绑定点击事件（用addEventListener确保可靠）
